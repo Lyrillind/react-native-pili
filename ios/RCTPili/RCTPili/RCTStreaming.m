@@ -58,8 +58,6 @@ const char *networkStatus[] = {
                                                      name:AVAudioSessionInterruptionNotification
                                                    object:[AVAudioSession sharedInstance]];
 
-        NSRect screen = [[NSScreen mainScreen] frame];
-        CGSize videoSize = CGSizeMake((int)e.size.width , (int)e.size.height);
         self.sessionQueue = dispatch_queue_create("pili.queue.streaming", DISPATCH_QUEUE_SERIAL);
     }
 
@@ -87,8 +85,10 @@ const char *networkStatus[] = {
       int *bps = [video[@"bps"] integerValue];
       int *maxFrameInterval = [video[@"maxFrameInterval"] integerValue];
 
-      NSRect screen = [[NSScreen mainScreen] frame];
-      CGSize videoSize = CGSizeMake((int)e.size.width , (int)e.size.height);
+      CGRect screenRect = [[UIScreen mainScreen] bounds];
+      CGFloat screenWidth = screenRect.size.width;
+      CGFloat screenHeight = screenRect.size.height;
+      CGSize videoSize = CGSizeMake(screenWidth, screenHeight);
 
       PLVideoCaptureConfiguration *videoCaptureConfiguration = [PLVideoCaptureConfiguration defaultConfiguration];
       PLVideoStreamingConfiguration *videoStreamingConfiguration = [[PLVideoStreamingConfiguration alloc] initWithVideoSize:videoSize expectedSourceVideoFrameRate:fps videoMaxKeyframeInterval:maxFrameInterval averageVideoBitRate:bps videoProfileLevel:AVVideoProfileLevelH264Baseline31];
@@ -100,17 +100,12 @@ const char *networkStatus[] = {
       self.session = [[PLMediaStreamingSession alloc] initWithVideoCaptureConfiguration:videoCaptureConfiguration audioCaptureConfiguration:audioCaptureConfiguration videoStreamingConfiguration:videoStreamingConfiguration audioStreamingConfiguration:audioStreamingConfiguration stream:nil];
       self.session.delegate = self;
 
-      [self addSubview:self.session.previewView];
-
       PLPermissionRequestor *permission = [[PLPermissionRequestor alloc] init];
       permission.noPermission = ^{};
       permission.permissionGranted = ^{
-          UIView *previewView = _streamingSession.previewView;
+          UIView *previewView = self.session.previewView;
           dispatch_async(dispatch_get_main_queue(), ^{
-              [self.cameraPreviewView insertSubview:previewView atIndex:0];
-              [previewView mas_makeConstraints:^(MASConstraintMaker *make) {
-                  make.top.bottom.left.and.right.equalTo(self.cameraPreviewView);
-              }];
+              [self addSubview:previewView];
           });
       };
       [permission checkAndRequestPermission];
@@ -170,7 +165,7 @@ const char *networkStatus[] = {
 
 - (void)stopSession {
     dispatch_async(self.sessionQueue, ^{
-        [self.session stop];
+        [self.session stopStreaming];
     });
 }
 

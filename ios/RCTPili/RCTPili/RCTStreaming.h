@@ -14,9 +14,9 @@
 
 @class RCTEventDispatcher;
 
-@interface RCTStreaming : UIView<PLCameraStreamingSessionDelegate,PLStreamingSendingBufferDelegate>
+@interface RCTStreaming : UIView<PLMediaStreamingSessionDelegate,PLStreamingSendingBufferDelegate>
 
-@property (nonatomic, strong) PLCameraStreamingSession  *session;
+@property (nonatomic, strong) PLMediaStreamingSession  *session;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) Reachability *internetReachability;
 @property (nonatomic, strong) NSDictionary  *profile;
