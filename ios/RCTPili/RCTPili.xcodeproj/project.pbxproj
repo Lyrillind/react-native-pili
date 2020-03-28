@@ -9,10 +9,6 @@
 /* Begin PBXBuildFile section */
 		78CFC6511D8942EC00386E6B /* RCTPili.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CFC6451D8942EC00386E6B /* RCTPili.h */; };
 		78CFC6521D8942EC00386E6B /* RCTPili.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CFC6461D8942EC00386E6B /* RCTPili.m */; };
-		78CFC6531D8942EC00386E6B /* RCTPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CFC6471D8942EC00386E6B /* RCTPlayer.h */; };
-		78CFC6541D8942EC00386E6B /* RCTPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CFC6481D8942EC00386E6B /* RCTPlayer.m */; };
-		78CFC6551D8942EC00386E6B /* RCTPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CFC6491D8942EC00386E6B /* RCTPlayerManager.h */; };
-		78CFC6561D8942EC00386E6B /* RCTPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CFC64A1D8942EC00386E6B /* RCTPlayerManager.m */; };
 		78CFC6571D8942EC00386E6B /* RCTStreaming.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CFC64B1D8942EC00386E6B /* RCTStreaming.h */; };
 		78CFC6581D8942EC00386E6B /* RCTStreaming.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CFC64C1D8942EC00386E6B /* RCTStreaming.m */; };
 		78CFC6591D8942EC00386E6B /* RCTStreamingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CFC64D1D8942EC00386E6B /* RCTStreamingManager.h */; };
@@ -26,10 +22,6 @@
 		78CFC63F1D89426D00386E6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78CFC6451D8942EC00386E6B /* RCTPili.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTPili.h; sourceTree = "<group>"; };
 		78CFC6461D8942EC00386E6B /* RCTPili.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTPili.m; sourceTree = "<group>"; };
-		78CFC6471D8942EC00386E6B /* RCTPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTPlayer.h; sourceTree = "<group>"; };
-		78CFC6481D8942EC00386E6B /* RCTPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTPlayer.m; sourceTree = "<group>"; };
-		78CFC6491D8942EC00386E6B /* RCTPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTPlayerManager.h; sourceTree = "<group>"; };
-		78CFC64A1D8942EC00386E6B /* RCTPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTPlayerManager.m; sourceTree = "<group>"; };
 		78CFC64B1D8942EC00386E6B /* RCTStreaming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTStreaming.h; sourceTree = "<group>"; };
 		78CFC64C1D8942EC00386E6B /* RCTStreaming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTStreaming.m; sourceTree = "<group>"; };
 		78CFC64D1D8942EC00386E6B /* RCTStreamingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTStreamingManager.h; sourceTree = "<group>"; };
@@ -70,10 +62,6 @@
 			children = (
 				78CFC6451D8942EC00386E6B /* RCTPili.h */,
 				78CFC6461D8942EC00386E6B /* RCTPili.m */,
-				78CFC6471D8942EC00386E6B /* RCTPlayer.h */,
-				78CFC6481D8942EC00386E6B /* RCTPlayer.m */,
-				78CFC6491D8942EC00386E6B /* RCTPlayerManager.h */,
-				78CFC64A1D8942EC00386E6B /* RCTPlayerManager.m */,
 				78CFC64B1D8942EC00386E6B /* RCTStreaming.h */,
 				78CFC64C1D8942EC00386E6B /* RCTStreaming.m */,
 				78CFC64D1D8942EC00386E6B /* RCTStreamingManager.h */,
@@ -94,9 +82,7 @@
 			files = (
 				78CFC6511D8942EC00386E6B /* RCTPili.h in Headers */,
 				78CFC6591D8942EC00386E6B /* RCTStreamingManager.h in Headers */,
-				78CFC6551D8942EC00386E6B /* RCTPlayerManager.h in Headers */,
 				78CFC65B1D8942EC00386E6B /* Reachability.h in Headers */,
-				78CFC6531D8942EC00386E6B /* RCTPlayer.h in Headers */,
 				78CFC6571D8942EC00386E6B /* RCTStreaming.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +127,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 78CFC6301D89426D00386E6B;
@@ -170,10 +157,8 @@
 			files = (
 				78CFC6581D8942EC00386E6B /* RCTStreaming.m in Sources */,
 				78CFC65A1D8942EC00386E6B /* RCTStreamingManager.m in Sources */,
-				78CFC6541D8942EC00386E6B /* RCTPlayer.m in Sources */,
 				78CFC6521D8942EC00386E6B /* RCTPili.m in Sources */,
 				78CFC65C1D8942EC00386E6B /* Reachability.m in Sources */,
-				78CFC6561D8942EC00386E6B /* RCTPlayerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
