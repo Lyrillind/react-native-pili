@@ -116,7 +116,7 @@ const char *networkStatus[] = {
                   [self setMuted:_muted];
               }
 
-              [self setCamera:@"front"];
+              [self setCamera:_camera];
 
               [self startSession];
           });
