@@ -22,6 +22,13 @@
 @property (nonatomic, strong) NSDictionary  *profile;
 @property (nonatomic, strong) NSString *rtmpURL;
 
+@property (nonatomic, copy) RCTBubblingEventBlock onReady;
+@property (nonatomic, copy) RCTBubblingEventBlock onConnecting;
+@property (nonatomic, copy) RCTBubblingEventBlock onStreaming;
+@property (nonatomic, copy) RCTBubblingEventBlock onShutdown;
+@property (nonatomic, copy) RCTBubblingEventBlock onIOError;
+@property (nonatomic, copy) RCTBubblingEventBlock onDisconnected;
+
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher NS_DESIGNATED_INITIALIZER;
 
 @end

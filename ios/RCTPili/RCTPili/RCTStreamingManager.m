@@ -19,18 +19,6 @@ RCT_EXPORT_MODULE();
     return [[RCTStreaming alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
 }
 
-- (NSArray *)customDirectEventTypes
-{
-    return @[
-             @"onReady",
-             @"onConnecting",
-             @"onStreaming",
-             @"onShutdown",
-             @"onIOError",
-             @"onDisconnected"
-             ];
-}
-
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
@@ -43,6 +31,13 @@ RCT_EXPORT_VIEW_PROPERTY(muted, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(zoom, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(focus, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(camera, NSString);
+
+RCT_EXPORT_VIEW_PROPERTY(onReady, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onConnecting, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onStreaming, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onShutdown, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onIOError, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onDisconnected, RCTBubblingEventBlock);
 
 
 
