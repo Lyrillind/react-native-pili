@@ -47,7 +47,7 @@ const char *networkStatus[] = {
         _started = YES;
         _muted = NO;
         _focus = NO;
-        _camera = @"front";
+        _camera = @"back";
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         self.internetReachability = [Reachability reachabilityForInternetConnection];
@@ -106,6 +106,19 @@ const char *networkStatus[] = {
           UIView *previewView = self.session.previewView;
           dispatch_async(dispatch_get_main_queue(), ^{
               [self addSubview:previewView];
+
+              if(_focus){
+                  [self.session setSmoothAutoFocusEnabled:_focus];
+                  [self.session setTouchToFocusEnable:_focus];
+              }
+
+              if(_muted){
+                  [self setMuted:_muted];
+              }
+
+              [self setCamera:@"front"];
+
+              [self startSession];
           });
       };
       [permission checkAndRequestPermission];
