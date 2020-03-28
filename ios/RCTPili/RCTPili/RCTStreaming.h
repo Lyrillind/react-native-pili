@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RCTView.h"
-#import "PLCameraStreamingKit.h"
+#import <PLMediaStreamingKit/PLMediaStreamingKit.h>
 #import "Reachability.h"
 #import <asl.h>
 

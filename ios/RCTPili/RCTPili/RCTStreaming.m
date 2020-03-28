@@ -10,6 +10,7 @@
 #import "RCTBridgeModule.h"
 #import "UIView+React.h"
 #import "RCTEventDispatcher.h"
+#import "PLPermissionRequestor.h"
 
 
 @implementation RCTStreaming{
@@ -56,13 +57,9 @@ const char *networkStatus[] = {
                                                  selector:@selector(handleInterruption:)
                                                      name:AVAudioSessionInterruptionNotification
                                                    object:[AVAudioSession sharedInstance]];
-        CGSize videoSize = CGSizeMake(480 , 640);
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-        if (orientation <= AVCaptureVideoOrientationLandscapeLeft) {
-            if (orientation > AVCaptureVideoOrientationPortraitUpsideDown) {
-                videoSize = CGSizeMake(640 , 480);
-            }
-        }
+
+        NSRect screen = [[NSScreen mainScreen] frame];
+        CGSize videoSize = CGSizeMake((int)e.size.width , (int)e.size.height);
         self.sessionQueue = dispatch_queue_create("pili.queue.streaming", DISPATCH_QUEUE_SERIAL);
     }
 
@@ -83,87 +80,40 @@ const char *networkStatus[] = {
 - (void) setSourceAndProfile{
     if(self.profile && self.rtmpURL){
 
-        void (^permissionBlock)(void) = ^{
-            dispatch_async(self.sessionQueue, ^{
-                NSDictionary *video = self.profile[@"video"];
-                NSDictionary *audio = self.profile[@"audio"];
+      NSDictionary *video = self.profile[@"video"];
+      NSDictionary *audio = self.profile[@"audio"];
 
-                int *fps = [video[@"fps"] integerValue];
-                int *bps = [video[@"bps"] integerValue];
-                int *maxFrameInterval = [video[@"maxFrameInterval"] integerValue];
-                //TODO
-                double height = 800;
-                double width = 640;
+      int *fps = [video[@"fps"] integerValue];
+      int *bps = [video[@"bps"] integerValue];
+      int *maxFrameInterval = [video[@"maxFrameInterval"] integerValue];
 
-                //TODO videoProfileLevel 需要通过 分辨率 选择
+      NSRect screen = [[NSScreen mainScreen] frame];
+      CGSize videoSize = CGSizeMake((int)e.size.width , (int)e.size.height);
 
-                PLVideoStreamingConfiguration *videoStreamingConfiguration = [[PLVideoStreamingConfiguration alloc] initWithVideoSize:CGSizeMake(width, height) expectedSourceVideoFrameRate:fps videoMaxKeyframeInterval:maxFrameInterval averageVideoBitRate:bps videoProfileLevel:AVVideoProfileLevelH264Baseline31];
+      PLVideoCaptureConfiguration *videoCaptureConfiguration = [PLVideoCaptureConfiguration defaultConfiguration];
+      PLVideoStreamingConfiguration *videoStreamingConfiguration = [[PLVideoStreamingConfiguration alloc] initWithVideoSize:videoSize expectedSourceVideoFrameRate:fps videoMaxKeyframeInterval:maxFrameInterval averageVideoBitRate:bps videoProfileLevel:AVVideoProfileLevelH264Baseline31];
 
-                PLVideoCaptureConfiguration *videoCaptureConfiguration = [PLVideoCaptureConfiguration defaultConfiguration];
+      PLAudioCaptureConfiguration *audioCaptureConfiguration = [PLAudioCaptureConfiguration defaultConfiguration];
+      PLAudioStreamingConfiguration *audioStreamingConfiguration = [PLAudioStreamingConfiguration defaultConfiguration];
 
-                PLAudioCaptureConfiguration *audioCaptureConfiguration = [PLAudioCaptureConfiguration defaultConfiguration];
-                // 音频编码配置
-                PLAudioStreamingConfiguration *audioStreamingConfiguration = [PLAudioStreamingConfiguration defaultConfiguration];
-                AVCaptureVideoOrientation orientation = (AVCaptureVideoOrientation)(([[UIDevice currentDevice] orientation] <= UIDeviceOrientationLandscapeRight && [[UIDevice currentDevice] orientation] != UIDeviceOrientationUnknown) ? [[UIDevice currentDevice] orientation]: UIDeviceOrientationPortrait);
-                // 推流 session
-                self.session = [[PLCameraStreamingSession alloc] initWithVideoCaptureConfiguration:videoCaptureConfiguration audioCaptureConfiguration:audioCaptureConfiguration videoStreamingConfiguration:videoStreamingConfiguration audioStreamingConfiguration:audioStreamingConfiguration stream:nil videoOrientation:orientation];
-                self.session.delegate = self;
+      // 推流 session
+      self.session = [[PLMediaStreamingSession alloc] initWithVideoCaptureConfiguration:videoCaptureConfiguration audioCaptureConfiguration:audioCaptureConfiguration videoStreamingConfiguration:videoStreamingConfiguration audioStreamingConfiguration:audioStreamingConfiguration stream:nil];
+      self.session.delegate = self;
 
-                //            UIImage *waterMark = [UIImage imageNamed:@"qiniu.png"];
-                //            PLFilterHandler handler = [self.session addWaterMark:waterMark origin:CGPointMake(100, 300)];
-                //            self.filterHandlers = [@[handler] mutableCopy];//TODO -  水印暂时注释
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIView *previewView = self.session.previewView;
-                    [self addSubview:previewView];
-                    [previewView setTranslatesAutoresizingMaskIntoConstraints:NO];
+      [self addSubview:self.session.previewView];
 
-                    NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:previewView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
-                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:previewView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
-                    NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:previewView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0];
-                    NSLayoutConstraint *height = [NSLayoutConstraint constraintWithItem:previewView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0];
-
-                    NSArray *constraints = [NSArray arrayWithObjects:centerX, centerY,width,height, nil];
-                    [self addConstraints: constraints];
-
-                    NSString *log = [NSString stringWithFormat:@"Zoom Range: [1..%.0f]", self.session.videoActiveFormat.videoMaxZoomFactor];
-                    NSLog(@"%@", log);
-
-                    if(_focus){
-                        [self.session setSmoothAutoFocusEnabled:_focus];
-                        [self.session setTouchToFocusEnable:_focus];
-                    }
-
-                    if(_muted){
-                        [self setMuted:_muted];
-                    }
-
-                    [self startSession];
-                });
-            });
-        };
-        void (^noAccessBlock)(void) = ^{
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Access", nil)
-                                                                message:NSLocalizedString(@"!", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-                                                      otherButtonTitles:nil];
-            [alertView show];
-        };
-
-        switch ([PLCameraStreamingSession cameraAuthorizationStatus]) {
-            case PLAuthorizationStatusAuthorized:
-                permissionBlock();
-                break;
-            case PLAuthorizationStatusNotDetermined: {
-                [PLCameraStreamingSession requestCameraAccessWithCompletionHandler:^(BOOL granted) {
-                    granted ? permissionBlock() : noAccessBlock();
-                }];
-            }
-                break;
-            default:
-                noAccessBlock();
-                break;
-        }
+      PLPermissionRequestor *permission = [[PLPermissionRequestor alloc] init];
+      permission.noPermission = ^{};
+      permission.permissionGranted = ^{
+          UIView *previewView = _streamingSession.previewView;
+          dispatch_async(dispatch_get_main_queue(), ^{
+              [self.cameraPreviewView insertSubview:previewView atIndex:0];
+              [previewView mas_makeConstraints:^(MASConstraintMaker *make) {
+                  make.top.bottom.left.and.right.equalTo(self.cameraPreviewView);
+              }];
+          });
+      };
+      [permission checkAndRequestPermission];
 
     }
 }
@@ -227,20 +177,25 @@ const char *networkStatus[] = {
 - (void)startSession {
     dispatch_async(self.sessionQueue, ^{
         NSURL *streamURL = [NSURL URLWithString:self.rtmpURL];
-        [self.session startWithPushURL:streamURL feedback:^(PLStreamStartStateFeedback feedback) {
+        [self.session startStreamingWithPushURL:streamURL feedback:^(PLStreamStartStateFeedback feedback) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"success ");
+                if (PLStreamStartStateSuccess == feedback) {
+                    NSLog(@"success ");
+                } else {
+                    [[[UIAlertView alloc] initWithTitle:@"错误" message:@"推流失败了" delegate:nil cancelButtonTitle:@"知道啦" otherButtonTitles:nil] show];
+                    self.onIOError(@{@"onIOError": self.reactTag});
+                }
             });
         }];
     });
 }
 
-- (void)cameraStreamingSession:(PLCameraStreamingSession *)session streamStatusDidUpdate:(PLStreamStatus *)status {
+- (void)mediaStreamingSession:(PLMediaStreamingSession *)session streamStatusDidUpdate:(PLStreamStatus *)status {
     NSString *log = [NSString stringWithFormat:@"Stream Status: %@", status];
     NSLog(@"%@", log);
 }
 
-- (void)cameraStreamingSession:(PLCameraStreamingSession *)session streamStateDidChange:(PLStreamState)state {
+- (void)mediaStreamingSession:(PLMediaStreamingSession *)session streamStateDidChange:(PLStreamState)state {
     NSString *log = [NSString stringWithFormat:@"Stream State: %s", stateNames[state]];
     NSLog(@"%@", log);
 
@@ -255,7 +210,6 @@ const char *networkStatus[] = {
             self.onStreaming(@{@"onStreaming": self.reactTag});
             break;
         case PLStreamStateDisconnecting:
-
             break;
         case PLStreamStateDisconnected:
             self.onDisconnected(@{@"onDisconnected": self.reactTag});
@@ -269,7 +223,8 @@ const char *networkStatus[] = {
     }
 
 }
-- (void)cameraStreamingSession:(PLCameraStreamingSession *)session didDisconnectWithError:(NSError *)error {
+
+- (void)mediaStreamingSession:(PLMediaStreamingSession *)session didDisconnectWithError:(NSError *)error {
     NSString *log = [NSString stringWithFormat:@"Stream State: Error. %@", error];
     NSLog(@"%@", log);
     [self startSession];
