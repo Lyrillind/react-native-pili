@@ -3,6 +3,5 @@
  */
 module.exports = {
   Streaming: require('./Streaming'),
-  AudioStreaming: require('./AudioStreaming'),
   StreamingConst: require('./StreamingConst')
 };
