@@ -32,5 +32,5 @@ dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.qiniu:happy-dns:0.2.+'
     compile 'com.qiniu.pili:pili-android-qos:0.8.13'
-    compile files('libs/pldroid-media-streaming-2.0.4.jar')
+    compile files('libs/pldroid-media-streaming-2.4.1.jar')
 }

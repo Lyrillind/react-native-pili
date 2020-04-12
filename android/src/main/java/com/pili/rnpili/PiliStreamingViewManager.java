@@ -161,6 +161,11 @@ public class PiliStreamingViewManager extends SimpleViewManager<AspectFrameLayou
     }
 
     @Override
+    public int onPreviewFpsSelected(List<int[]> list) {
+        return -1;
+    }
+
+    @Override
     @Nullable
     public Map getExportedCustomDirectEventTypeConstants() {
         MapBuilder.Builder builder = MapBuilder.builder();
