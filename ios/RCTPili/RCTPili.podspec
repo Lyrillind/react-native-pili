@@ -24,13 +24,13 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   s.author             = { "buhe" => "bugu1986@126.com" }
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "10.0"
   s.source       = { :git => "https://github.com/buhe/react-native-piliv2.git", :tag => "master" }
   s.source_files  = "RCTPili/**/*.{h,m}"
   s.requires_arc = true
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   s.dependency "React"
-  s.dependency "PLMediaStreamingKit"
+  s.dependency "PLMediaStreamingKit", "2.3.5"
 
 end
