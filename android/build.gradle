@@ -30,7 +30,7 @@ dependencies {
     testimplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:23.1.1'
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.qiniu:happy-dns:0.2.+'
+    implementation 'com.qiniu:happy-dns:0.2.13'
     implementation 'com.qiniu.pili:pili-android-qos:0.8.13'
     compile files('libs/pldroid-media-streaming-2.4.1.jar')
 }
