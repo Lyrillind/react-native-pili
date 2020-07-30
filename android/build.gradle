@@ -27,7 +27,7 @@ allprojects {
 }
 
 dependencies {
-    testimplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:23.1.1'
     implementation 'com.facebook.react:react-native:+'
     implementation 'com.qiniu:happy-dns:0.2.13'
